@@ -8,20 +8,18 @@ class warps {
     constructor() {
         this.globalList = database.table('globalWarps')
         this.localList = database.table('localWarps')
-        this.dimension = World.getDimension("overworld")
+        this.dimension = world.getDimension("overworld")
     }
 
     setGlobalWarp({ warpName, Player }) {
         if (!player.hasTag({ name: Player.nameTag, tag: 'staff' }))
-            return Commands.run(
+            return this.dimension.runCommand(
                `tellraw ${Player.nameTag} ${JSON.stringify({ rawtext:[ { text: '§➥§l§dWarp §8>> §8 * §cInsufficient permissions! §8*' }]})}`, 
-               this.dimension
             )
 
         if (this.globalList.has(warpName))
-            return Commands.run(
+            return this.dimension.runCommand(
                `tellraw ${Player.nameTag} ${JSON.stringify({ rawtext:[ { text: `§➥§l§dWarp §8>> §e${warpName} §aalready exists!` }]})}`, 
-               this.dimension
             )
         
         const Warp = {
@@ -36,30 +34,26 @@ class warps {
         
         this.globalList.set(warpName, Warp)
 
-        return Commands.run(
+        return this.dimension.runCommand(
             `tellraw ${Player.nameTag} ${JSON.stringify({ rawtext:[ { text: `§➥§l§dWarp §8>> §aset §e${warpName} §aat §e${Warp.location.x}, ${Warp.location.y}, ${Warp.location.z}`}]})}`,
-            this.dimension
         )
     }
 
     removeGlobalWarp({ warpName, Player }) {
         if (!player.hasTag({ name: Player.nameTag, tag: 'staff' }))
-            return Commands.run(
+            return this.dimension.runCommand(
                `tellraw ${Player.nameTag} ${JSON.stringify({ rawtext:[ { text: '§➥§l§dWarp §8>> §8 * §cInsufficient permissions! §8*' }]})}`, 
-               this.dimension
             )
 
         if (!this.globalList.has(warpName))
-            return Commands.run(
+            return this.dimension.runCommand(
                `tellraw ${Player.nameTag} ${JSON.stringify({ rawtext:[ { text: `§➥§l§dWarp §8>> §e${warpName} §adoes not exist!` }]})}`, 
-               this.dimension
              )
         
         this.globalList.remove(warpName)
 
-        return Commands.run(
+        return this.dimension.runCommand(
             `tellraw ${Player.nameTag} ${JSON.stringify({ rawtext:[ { text: `§➥§l§dWarp §8>> §aremoved §e${warpName}`}]})}`,
-            this.dimension
         )
     }
 
@@ -68,9 +62,8 @@ class warps {
         let list = this.localList.get(Player.nameTag).value
 
         if (list.some(element => element?.name == warpName) || this.globalList.has(warpName))
-            return Commands.run(
+            return this.dimension.runCommand(
                `tellraw ${Player.nameTag} ${JSON.stringify({ rawtext:[ { text: `§➥§l§dWarp §8>> §e${warpName} §aalready exists!` }]})}`, 
-               this.dimension
             )
         
         let Warp = {
@@ -86,9 +79,8 @@ class warps {
         list.push(Warp)
         this.localList.update(Player.nameTag, list)
 
-        return Commands.run(
+        return this.dimension.runCommand(
             `tellraw ${Player.nameTag} ${JSON.stringify({ rawtext:[ { text: `§➥§l§dWarp §8>> §aadded §e${warpName} §aat §e${Warp.location.x}, ${Warp.location.y}, ${Warp.location.z} `}]})}`,
-            this.dimension
         )
     }
 
@@ -99,17 +91,15 @@ class warps {
         let warp = list.find(warp => warp?.name == warpName)
 
         if (!warp)
-            return Commands.run(
+            return this.dimension.runCommand(
                `tellraw ${Player.nameTag} ${JSON.stringify({ rawtext:[ { text: `§➥§l§dWarp §8>> §e${warpName} §adoes not exist!` }]})}`, 
-               this.dimension
              )
 
         list.splice(list.indexOf(warp), 1)
         this.localList.update(Player.nameTag, list)
         
-        return Commands.run(
+        return this.dimension.runCommand(
             `tellraw ${Player.nameTag} ${JSON.stringify({ rawtext:[ { text: `§➥§l§dWarp §8>> §aremoved §e${warpName}`}]})}`,
-            this.dimension
         )
     }
 
@@ -117,14 +107,13 @@ class warps {
         let warp = this.globalList.get(warpName)?.value ?? this.localList.get(Player.nameTag)?.value?.find(element => element.name == warpName)
 
         if (!warp)
-            return Commands.run(
+            return this.dimension.runCommand(
                `tellraw ${Player.nameTag} ${JSON.stringify({ rawtext:[ { text: `§➥§l§dWarp §8>> §e${warpName} §adoes not exist!` }]})}`, 
-               this.dimension
              )
 
-        Commands.run(`tp "${Player.nameTag}" ${warp.location.x} ${warp.location.y} ${warp.location.z}`, World.getDimension('overworld'))
+        this.dimension.runCommand(`tp "${Player.nameTag}" ${warp.location.x} ${warp.location.y} ${warp.location.z}`)
         
-        return Commands.run(
+        return world.getDimension('overworld').runCommand(
             `tellraw "${Player.nameTag}" ${JSON.stringify({ rawtext:[ { text: `§➥§l§dWarp §8>> §ateleported to §7${warpName}`}]})}`,
             this.dimension
         )
@@ -143,9 +132,8 @@ class warps {
 
         
 
-        return Commands.run(
+        return this.dimension.runCommand(
             `tellraw ${Player.nameTag} ${JSON.stringify({ rawtext:[ { text: message }]})}`,
-            this.dimension
         )
     }
 }
