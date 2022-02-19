@@ -2,7 +2,7 @@ import { world } from "mojang-minecraft"
 import CommandBuilder from "../classes/builders/CommandBuilder.js";
 import CommandHandler from "../classes/CommandRegistration.js"
 import player from '../utils/player.js'
-import warpManager from '../utils/warps.js'
+import warpManager from '../utils/warp.js'
 
 
 const registration = new CommandBuilder()
