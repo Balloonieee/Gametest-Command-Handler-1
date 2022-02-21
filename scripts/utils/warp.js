@@ -1,6 +1,4 @@
 import { world } from "mojang-minecraft"
-import CommandBuilder from "../classes/builders/CommandBuilder.js";
-import CommandHandler from "../classes/CommandRegistration.js"
 import player from './player.js'
 import database from './database.js'
 
